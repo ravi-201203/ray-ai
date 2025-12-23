@@ -1,0 +1,6 @@
+fastapi
+ray
+pydantic
+zen-engine
+uvicorn
+dotenv

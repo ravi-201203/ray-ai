@@ -1,0 +1,506 @@
+{
+  "contentType": "application/vnd.gorules.decision",
+  "nodes": [
+    {
+      "id": "71233a11-5f31-4720-9a95-5ea2a96b60d8",
+      "name": "request",
+      "type": "inputNode",
+      "content": {
+        "schema": ""
+      },
+      "position": {
+        "x": -495,
+        "y": 145
+      }
+    },
+    {
+      "id": "f6408788-e43b-484a-9bed-0df134ef504b",
+      "name": "Count slabwise units",
+      "type": "decisionTableNode",
+      "content": {
+        "rules": [
+          {
+            "_id": "45539c06-d198-4a32-8f76-04ab0422e70f",
+            "_description": "",
+            "3f1dd50a-d681-48c9-aada-e5100df7dab3": "<=100",
+            "a6e776d7-38ef-44bd-a346-6c7e68de9a3e": "0",
+            "af664a6a-1a06-49f7-9182-bc0753ee9f83": "0",
+            "c8fe0d9f-5537-4b11-8794-933318c06fdb": "units_consumed"
+          },
+          {
+            "_id": "b61fe674-eeb4-46e2-b088-93e6744445f1",
+            "_description": "",
+            "3f1dd50a-d681-48c9-aada-e5100df7dab3": "[100..200]",
+            "a6e776d7-38ef-44bd-a346-6c7e68de9a3e": "units_consumed-100",
+            "af664a6a-1a06-49f7-9182-bc0753ee9f83": "0",
+            "c8fe0d9f-5537-4b11-8794-933318c06fdb": "100"
+          },
+          {
+            "_id": "c5e78143-3090-47aa-bc89-8f8ab31fb039",
+            "_description": "",
+            "3f1dd50a-d681-48c9-aada-e5100df7dab3": ">200",
+            "a6e776d7-38ef-44bd-a346-6c7e68de9a3e": "100",
+            "af664a6a-1a06-49f7-9182-bc0753ee9f83": "units_consumed-200",
+            "c8fe0d9f-5537-4b11-8794-933318c06fdb": "100"
+          }
+        ],
+        "inputs": [
+          {
+            "id": "3f1dd50a-d681-48c9-aada-e5100df7dab3",
+            "name": "Unit",
+            "field": "units_consumed"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "c8fe0d9f-5537-4b11-8794-933318c06fdb",
+            "name": "Slab1",
+            "field": "units_slab_1"
+          },
+          {
+            "id": "a6e776d7-38ef-44bd-a346-6c7e68de9a3e",
+            "name": "Slab2",
+            "field": "units_slab_2"
+          },
+          {
+            "id": "af664a6a-1a06-49f7-9182-bc0753ee9f83",
+            "name": "Slab3",
+            "field": "units_slab_3"
+          }
+        ],
+        "hitPolicy": "first",
+        "inputField": null,
+        "outputPath": null,
+        "passThrough": true,
+        "executionMode": "single"
+      },
+      "position": {
+        "x": 1045,
+        "y": 30
+      }
+    },
+    {
+      "id": "9dba8e8f-7cdb-45e6-aa3b-4842a81f61ea",
+      "name": "slabwise total energy charge",
+      "type": "expressionNode",
+      "content": {
+        "inputField": null,
+        "outputPath": null,
+        "expressions": [
+          {
+            "id": "8e720f23-3e94-440a-b974-ae02c7d51731",
+            "key": "slab_1_total_rate",
+            "value": "units_slab_1 * slab_1_rate_per_unit"
+          },
+          {
+            "id": "4d92b1c8-3246-43cc-bbc6-06517003acce",
+            "key": "slab_2_total_rate",
+            "value": "units_slab_2 * slab_2_rate_per_unit"
+          },
+          {
+            "id": "e714e259-f318-4afb-a7f0-4d7a5d2d809a",
+            "key": "slab_3_total_rate",
+            "value": "units_slab_3 * slab_3_rate_per_unit"
+          },
+          {
+            "id": "6781cb62-8c1d-4ae2-8c64-d67757fce37e",
+            "key": "transformation_loss_percent",
+            "value": "4.87"
+          },
+          {
+            "id": "a7c46fe7-5e94-4d3b-9cb9-9924f11e4d51",
+            "key": "total_energry_charge",
+            "value": "round(($.slab_1_total_rate + $.slab_2_total_rate + $.slab_3_total_rate) + (($.slab_1_total_rate + $.slab_2_total_rate + $.slab_3_total_rate) * ($.transformation_loss_percent / 100)), 2)"
+          },
+          {
+            "id": "c18b7ce4-c55c-4125-bd28-4f94332d8276",
+            "key": "slab_1_subsidized_total_rate",
+            "value": "units_slab_1 * slab_1_subsidized_rate_per_unit"
+          },
+          {
+            "id": "3f109d79-3f7e-4bf8-9b17-9d5a59388d35",
+            "key": "slab_2_subsidized_total_rate",
+            "value": "units_slab_2 * slab_2_subsidized_rate_per_unit"
+          },
+          {
+            "id": "c95abe90-2d7d-4f58-bf66-38d6699ed074",
+            "key": "slab_3_subsidized_total_rate",
+            "value": "units_slab_3 * slab_3_subsidized_rate_per_unit"
+          },
+          {
+            "id": "c3b03194-8481-410f-a860-00a9b7c370e4",
+            "key": "total_subsidized_energry_charge",
+            "value": "$.slab_1_subsidized_total_rate + $.slab_2_subsidized_total_rate + $.slab_3_subsidized_total_rate"
+          },
+          {
+            "id": "21808186-a4a4-43fd-9317-8cbc84b432be",
+            "key": "subsidy_on_energy_charge",
+            "value": "$.total_subsidized_energry_charge - $.total_energry_charge"
+          },
+          {
+            "id": "100b11d5-0bef-400b-8595-3fac187bf84d",
+            "key": "",
+            "value": ""
+          }
+        ],
+        "passThrough": true,
+        "executionMode": "single"
+      },
+      "position": {
+        "x": 1410,
+        "y": 40
+      }
+    },
+    {
+      "id": "608b04c4-e890-490d-96a6-7553f8e0f2fc",
+      "name": "Fix charges",
+      "type": "decisionTableNode",
+      "content": {
+        "rules": [
+          {
+            "_id": "836e7515-8e0c-4ac8-8459-6da4ffe75809",
+            "_description": "",
+            "375489d9-2057-43cc-9076-f63aa429df72": "50",
+            "8b36ac9d-525c-4acf-943b-0af0b0f674b6": "50",
+            "dfc2fe75-cbda-495a-b93a-a490635843f5": "'LT'",
+            "e49fa024-d963-4c6d-ba57-5d6f8dac0130": "'Domestic'"
+          },
+          {
+            "_id": "647b4134-bd79-41a6-b59c-8fdff6221b17",
+            "_description": "",
+            "375489d9-2057-43cc-9076-f63aa429df72": "50",
+            "8b36ac9d-525c-4acf-943b-0af0b0f674b6": "50",
+            "dfc2fe75-cbda-495a-b93a-a490635843f5": "'HT'",
+            "e49fa024-d963-4c6d-ba57-5d6f8dac0130": "'Domestic'"
+          }
+        ],
+        "inputs": [
+          {
+            "id": "e49fa024-d963-4c6d-ba57-5d6f8dac0130",
+            "name": "Category",
+            "field": "category"
+          },
+          {
+            "id": "dfc2fe75-cbda-495a-b93a-a490635843f5",
+            "name": "Subcategory",
+            "field": "subcategory"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "375489d9-2057-43cc-9076-f63aa429df72",
+            "name": "Fix charge /KW/month",
+            "field": "fix_charge_rate_per_kw_per_month"
+          },
+          {
+            "id": "8b36ac9d-525c-4acf-943b-0af0b0f674b6",
+            "name": "Subsidized fix charge /KW/month",
+            "field": "subsidized_fix_charge_rate_per_kw_per_month"
+          }
+        ],
+        "hitPolicy": "first",
+        "inputField": null,
+        "outputPath": null,
+        "passThrough": true,
+        "executionMode": "single"
+      },
+      "position": {
+        "x": -200,
+        "y": 140
+      }
+    },
+    {
+      "id": "b8c88547-d29d-46bf-9b1e-f8e266ffa844",
+      "name": "Calculate fix charges",
+      "type": "expressionNode",
+      "content": {
+        "inputField": null,
+        "outputPath": null,
+        "expressions": [
+          {
+            "id": "5d6776c8-7f31-48d5-be35-a4afc0699e09",
+            "key": "total_fix_charge",
+            "value": "round(fix_charge_rate_per_kw_per_month * contracted_load * (days / 30), 2)"
+          }
+        ],
+        "passThrough": true,
+        "executionMode": "single"
+      },
+      "position": {
+        "x": 90,
+        "y": 140
+      }
+    },
+    {
+      "id": "302f495a-5e45-4307-aa64-eed1302de8a9",
+      "name": "switch1",
+      "type": "switchNode",
+      "content": {
+        "hitPolicy": "first",
+        "statements": [
+          {
+            "id": "2afbba60-4463-4924-a3c5-676394461740",
+            "condition": "category == 'Domestic' and subcategory == 'LT'",
+            "isDefault": false
+          },
+          {
+            "id": "9d036b65-65e8-4e13-b61d-148505125d57",
+            "condition": "category == 'Domestic' and subcategory == 'HT'",
+            "isDefault": false
+          }
+        ]
+      },
+      "position": {
+        "x": 660,
+        "y": 50
+      }
+    },
+    {
+      "id": "940ff7b7-fdaa-4c42-9143-5fb31f0b55c7",
+      "name": "total energy charge",
+      "type": "expressionNode",
+      "content": {
+        "inputField": null,
+        "outputPath": null,
+        "expressions": [
+          {
+            "id": "387412da-8722-4ee7-a25f-990b3220ad2c",
+            "key": "total_energry_charge",
+            "value": "units_consumed * rate_per_unit"
+          },
+          {
+            "id": "1fc646f3-9399-4ca7-9705-0462e8bcb34a",
+            "key": "total_subsidized_energry_charge",
+            "value": "units_consumed * subsidized_rate_per_unit"
+          },
+          {
+            "id": "b3de98e2-c1e1-4581-8899-43dac782ea8c",
+            "key": "subsidy_on_energy_charge",
+            "value": "$.total_subsidized_energry_charge - $.total_energry_charge"
+          }
+        ],
+        "passThrough": true,
+        "executionMode": "single"
+      },
+      "position": {
+        "x": 1040,
+        "y": 265
+      }
+    },
+    {
+      "id": "a3fd7c7d-e8d1-4535-a361-e9eb5c8f9312",
+      "name": "final charge",
+      "type": "expressionNode",
+      "content": {
+        "inputField": null,
+        "outputPath": null,
+        "expressions": [
+          {
+            "id": "7f77129e-ffd8-4ede-863f-0f927a1379b8",
+            "key": "rebate",
+            "value": "0.00"
+          },
+          {
+            "id": "ef602953-31a6-44e2-b5f7-01bf14f433c6",
+            "key": "surcharge",
+            "value": "0.00"
+          },
+          {
+            "id": "9679be05-f1a3-467d-ab31-cb970680d3df",
+            "key": "pole_usage_charge",
+            "value": "0.00"
+          },
+          {
+            "id": "f6128c3c-a3fb-43b9-a933-35ec074e7092",
+            "key": "arrears",
+            "value": "0.00"
+          },
+          {
+            "id": "75b6dd60-fd51-412f-a1c5-87ac9f61fce9",
+            "key": "pf_rebate",
+            "value": "0.00"
+          },
+          {
+            "id": "c7d5c04f-7c81-40df-8349-0da8ea6d3470",
+            "key": "total_bill_amount_payable",
+            "value": "round(total_fix_charge + total_energry_charge + meter_rent + $.rebate + $.surcharge + $.pole_usage_charge + $.arrears + + adjustment + $.pf_rebate + (subsidy_on_energy_charge), 2)\n                                                                                                                                 "
+          },
+          {
+            "id": "6bac8aa4-b6b3-4629-acc4-87a502c8f38c",
+            "key": "surcharge_on_outstanding_principal",
+            "value": "round($.total_bill_amount_payable * (2/100), 2)"
+          },
+          {
+            "id": "85fd7139-8116-468f-b635-bbe2e1e01d99",
+            "key": "total_bill_amount_payable_after_due_date",
+            "value": "round($.total_bill_amount_payable + $.surcharge_on_outstanding_principal , 2)"
+          }
+        ],
+        "passThrough": true,
+        "executionMode": "single"
+      },
+      "position": {
+        "x": 2055,
+        "y": 145
+      }
+    },
+    {
+      "id": "b4ef5db1-64af-4880-a866-0aa2983b264b",
+      "name": "Energy rates",
+      "type": "decisionTableNode",
+      "content": {
+        "rules": [
+          {
+            "_id": "fa819418-ede5-47b9-9aa6-e6f27aaf2fd0",
+            "_description": "",
+            "3be2c82a-6127-478c-a63e-9ee180213f28": "15.94",
+            "5814a340-1bba-4989-b22d-6e222c6474a1": "13.81",
+            "6038b60f-0a78-4376-a961-ff47d0dd8d59": "'LT'",
+            "73df8ce6-2615-4a3f-a152-bb79c563b921": "9.53",
+            "78f8ceba-4032-4a40-9fe4-544caed4e00f": "4.9",
+            "b4d5ca4a-32b8-46c9-8fa3-8801966df4e0": "",
+            "b5f6cfed-97a7-4b15-9849-fd29fe94b21e": "",
+            "cbd1b0e9-ee56-4f70-af68-04f611a5c116": "7.1",
+            "dd0095f3-c737-4ccc-999e-72659c50c6f6": "'Domestic'",
+            "e51998c2-40c0-4ea6-a70a-3e70e9cb7a69": "8.2"
+          },
+          {
+            "_id": "da8d50f7-e525-4a45-ae72-4f0c3a6d269e",
+            "_description": "",
+            "3be2c82a-6127-478c-a63e-9ee180213f28": "",
+            "5814a340-1bba-4989-b22d-6e222c6474a1": "",
+            "6038b60f-0a78-4376-a961-ff47d0dd8d59": "'HT'",
+            "73df8ce6-2615-4a3f-a152-bb79c563b921": "",
+            "78f8ceba-4032-4a40-9fe4-544caed4e00f": "",
+            "b4d5ca4a-32b8-46c9-8fa3-8801966df4e0": "8.65",
+            "b5f6cfed-97a7-4b15-9849-fd29fe94b21e": "10.60",
+            "cbd1b0e9-ee56-4f70-af68-04f611a5c116": "",
+            "dd0095f3-c737-4ccc-999e-72659c50c6f6": "'Domestic'",
+            "e51998c2-40c0-4ea6-a70a-3e70e9cb7a69": ""
+          }
+        ],
+        "inputs": [
+          {
+            "id": "dd0095f3-c737-4ccc-999e-72659c50c6f6",
+            "name": "Category",
+            "field": "category"
+          },
+          {
+            "id": "6038b60f-0a78-4376-a961-ff47d0dd8d59",
+            "name": "Subcategory",
+            "field": "subcategory"
+          }
+        ],
+        "outputs": [
+          {
+            "id": "73df8ce6-2615-4a3f-a152-bb79c563b921",
+            "name": "Slab 1 unit rate",
+            "field": "slab_1_rate_per_unit"
+          },
+          {
+            "id": "5814a340-1bba-4989-b22d-6e222c6474a1",
+            "name": "Slab 2 unit rate",
+            "field": "slab_2_rate_per_unit"
+          },
+          {
+            "id": "3be2c82a-6127-478c-a63e-9ee180213f28",
+            "name": "Slab 3 unit rate",
+            "field": "slab_3_rate_per_unit"
+          },
+          {
+            "id": "78f8ceba-4032-4a40-9fe4-544caed4e00f",
+            "name": "Slab 1 subsidized unit rate",
+            "field": "slab_1_subsidized_rate_per_unit"
+          },
+          {
+            "id": "cbd1b0e9-ee56-4f70-af68-04f611a5c116",
+            "name": "Slab 2 subsidized unit rate",
+            "field": "slab_2_subsidized_rate_per_unit"
+          },
+          {
+            "id": "e51998c2-40c0-4ea6-a70a-3e70e9cb7a69",
+            "name": "Slab 3 subsidized unit rate",
+            "field": "slab_3_subsidized_rate_per_unit"
+          },
+          {
+            "id": "b5f6cfed-97a7-4b15-9849-fd29fe94b21e",
+            "name": "Rate per unit",
+            "field": "rate_per_unit"
+          },
+          {
+            "id": "b4d5ca4a-32b8-46c9-8fa3-8801966df4e0",
+            "name": "Subsidized rate per unit",
+            "field": "subsidized_rate_per_unit"
+          }
+        ],
+        "hitPolicy": "first",
+        "inputField": null,
+        "outputPath": null,
+        "passThrough": true,
+        "executionMode": "single"
+      },
+      "position": {
+        "x": 375,
+        "y": 135
+      }
+    }
+  ],
+  "edges": [
+    {
+      "id": "95f0c394-f597-4ba8-8818-7b4feae5822e",
+      "type": "edge",
+      "sourceId": "f6408788-e43b-484a-9bed-0df134ef504b",
+      "targetId": "9dba8e8f-7cdb-45e6-aa3b-4842a81f61ea"
+    },
+    {
+      "id": "7f0598cf-2d1a-4de6-a0a6-da539dbf4d95",
+      "type": "edge",
+      "sourceId": "608b04c4-e890-490d-96a6-7553f8e0f2fc",
+      "targetId": "b8c88547-d29d-46bf-9b1e-f8e266ffa844"
+    },
+    {
+      "id": "85dc2feb-ab92-49cf-9389-6a1e20ebe145",
+      "type": "edge",
+      "sourceId": "71233a11-5f31-4720-9a95-5ea2a96b60d8",
+      "targetId": "608b04c4-e890-490d-96a6-7553f8e0f2fc"
+    },
+    {
+      "id": "eb72252c-3822-44be-b4f2-77c653358089",
+      "type": "edge",
+      "sourceId": "302f495a-5e45-4307-aa64-eed1302de8a9",
+      "targetId": "940ff7b7-fdaa-4c42-9143-5fb31f0b55c7",
+      "sourceHandle": "9d036b65-65e8-4e13-b61d-148505125d57"
+    },
+    {
+      "id": "8d7b4a02-1a48-4389-8d89-684b208a7700",
+      "type": "edge",
+      "sourceId": "9dba8e8f-7cdb-45e6-aa3b-4842a81f61ea",
+      "targetId": "a3fd7c7d-e8d1-4535-a361-e9eb5c8f9312"
+    },
+    {
+      "id": "025c843a-e416-439c-a38f-00231e0cd1aa",
+      "type": "edge",
+      "sourceId": "940ff7b7-fdaa-4c42-9143-5fb31f0b55c7",
+      "targetId": "a3fd7c7d-e8d1-4535-a361-e9eb5c8f9312"
+    },
+    {
+      "id": "7e76e435-cacd-4daf-82e2-ec54921c0da1",
+      "type": "edge",
+      "sourceId": "b8c88547-d29d-46bf-9b1e-f8e266ffa844",
+      "targetId": "b4ef5db1-64af-4880-a866-0aa2983b264b"
+    },
+    {
+      "id": "b6edba24-979f-439e-8941-5917daee625e",
+      "type": "edge",
+      "sourceId": "b4ef5db1-64af-4880-a866-0aa2983b264b",
+      "targetId": "302f495a-5e45-4307-aa64-eed1302de8a9"
+    },
+    {
+      "id": "30983b70-4697-4c6e-8efc-ec597e7b7521",
+      "type": "edge",
+      "sourceId": "302f495a-5e45-4307-aa64-eed1302de8a9",
+      "targetId": "f6408788-e43b-484a-9bed-0df134ef504b",
+      "sourceHandle": "2afbba60-4463-4924-a3c5-676394461740"
+    }
+  ]
+}
